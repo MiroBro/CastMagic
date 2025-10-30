@@ -9,7 +9,7 @@
         "name": "tome_declaration"
       }
     },
-    "comment": {
+    "_comment": {
       "type": "TOKEN",
       "content": {
         "type": "CHOICE",
@@ -600,7 +600,7 @@
     },
     {
       "type": "SYMBOL",
-      "name": "comment"
+      "name": "_comment"
     }
   ],
   "conflicts": [],

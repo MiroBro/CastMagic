@@ -3,13 +3,13 @@ module.exports = grammar({
 
   extras: $ => [
     /\s|\\\r?\n/,
-    $.comment,
+    $._comment,
   ],
 
   rules: {
     source_file: $ => repeat($.tome_declaration),
 
-    comment: $ => token(choice(
+    _comment: $ => token(choice(
       seq("//", /.*/),
       seq("#", /.*/),
       seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")

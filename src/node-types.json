@@ -449,11 +449,6 @@
     "named": false
   },
   {
-    "type": "comment",
-    "named": true,
-    "extra": true
-  },
-  {
     "type": "conjure",
     "named": false
   },
