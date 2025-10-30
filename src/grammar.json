@@ -9,6 +9,57 @@
         "name": "tome_declaration"
       }
     },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "//"
+              },
+              {
+                "type": "PATTERN",
+                "value": ".*"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "#"
+              },
+              {
+                "type": "PATTERN",
+                "value": ".*"
+              }
+            ]
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "/*"
+              },
+              {
+                "type": "PATTERN",
+                "value": "[^*]*\\*+([^/*][^*]*\\*+)*"
+              },
+              {
+                "type": "STRING",
+                "value": "/"
+              }
+            ]
+          }
+        ]
+      }
+    },
     "tome_declaration": {
       "type": "SEQ",
       "members": [
@@ -38,6 +89,31 @@
         }
       ]
     },
+    "tome_keyword": {
+      "type": "STRING",
+      "value": "tome"
+    },
+    "visibility_modifier": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "open"
+        },
+        {
+          "type": "STRING",
+          "value": "sealed"
+        },
+        {
+          "type": "STRING",
+          "value": "hidden"
+        },
+        {
+          "type": "STRING",
+          "value": "known"
+        }
+      ]
+    },
     "tome_body": {
       "type": "SEQ",
       "members": [
@@ -55,6 +131,35 @@
         {
           "type": "STRING",
           "value": "}"
+        }
+      ]
+    },
+    "statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "ritual_declaration"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "if_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "law_declaration"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "cast_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "conjure_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression_statement"
         }
       ]
     },
@@ -98,6 +203,10 @@
           "name": "block"
         }
       ]
+    },
+    "silent_keyword": {
+      "type": "STRING",
+      "value": "silent"
     },
     "parameter_list": {
       "type": "SEQ",
@@ -167,94 +276,36 @@
         },
         {
           "type": "SYMBOL",
-          "name": "glyph_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "law_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "chaos_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "custom_type"
+          "name": "identifier"
         }
       ]
     },
-    "custom_type": {
-      "type": "SYMBOL",
-      "name": "identifier"
-    },
-    "statement": {
+    "rune_type": {
       "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "if_statement"
+          "type": "STRING",
+          "value": "rune"
         },
-        {
-          "type": "SYMBOL",
-          "name": "while_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "law_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "cast_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "conjure_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "return_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expression_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "ritual_declaration"
-        }
-      ]
-    },
-    "if_statement": {
-      "type": "SEQ",
-      "members": [
         {
           "type": "STRING",
-          "value": "if"
+          "value": "sigil"
         },
-        {
-          "type": "SYMBOL",
-          "name": "parenthesized_expression"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "block"
-        }
-      ]
-    },
-    "while_statement": {
-      "type": "SEQ",
-      "members": [
         {
           "type": "STRING",
-          "value": "while"
+          "value": "glyph"
         },
         {
-          "type": "SYMBOL",
-          "name": "parenthesized_expression"
+          "type": "STRING",
+          "value": "word"
         },
         {
-          "type": "SYMBOL",
-          "name": "block"
+          "type": "STRING",
+          "value": "mark"
+        },
+        {
+          "type": "STRING",
+          "value": "trace"
         }
       ]
     },
@@ -305,51 +356,80 @@
         }
       ]
     },
-    "return_statement": {
+    "if_statement": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "release"
+          "value": "if"
         },
+        {
+          "type": "SYMBOL",
+          "name": "parenthesized_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "block"
+        }
+      ]
+    },
+    "block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "statement"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "expression_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ";"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "parenthesized_expression": {
+      "type": "SEQ",
+      "members": [
         {
           "type": "STRING",
           "value": "("
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "expression"
-            },
-            {
-              "type": "REPEAT",
-              "content": {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": ","
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "expression"
-                  }
-                ]
-              }
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "expression"
         },
         {
           "type": "STRING",
           "value": ")"
         }
       ]
-    },
-    "expression_statement": {
-      "type": "SYMBOL",
-      "name": "expression"
     },
     "expression": {
       "type": "CHOICE",
@@ -368,70 +448,24 @@
         },
         {
           "type": "SYMBOL",
-          "name": "number"
+          "name": "string"
         },
         {
           "type": "SYMBOL",
-          "name": "string"
+          "name": "number"
         }
       ]
-    },
-    "binary_expression": {
-      "type": "PREC_LEFT",
-      "value": 1,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "expression"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "="
-              },
-              {
-                "type": "STRING",
-                "value": "+"
-              },
-              {
-                "type": "STRING",
-                "value": "-"
-              },
-              {
-                "type": "STRING",
-                "value": "*"
-              },
-              {
-                "type": "STRING",
-                "value": "/"
-              },
-              {
-                "type": "STRING",
-                "value": "<"
-              },
-              {
-                "type": "STRING",
-                "value": ">"
-              }
-            ]
-          },
-          {
-            "type": "SYMBOL",
-            "name": "expression"
-          }
-        ]
-      }
     },
     "call_expression": {
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "identifier"
+          "type": "FIELD",
+          "name": "function",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
         },
         {
           "type": "STRING",
@@ -476,40 +510,73 @@
         }
       ]
     },
-    "parenthesized_expression": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "("
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expression"
-        },
-        {
-          "type": "STRING",
-          "value": ")"
-        }
-      ]
-    },
-    "block": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
+    "binary_expression": {
+      "type": "PREC_LEFT",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
             "type": "SYMBOL",
-            "name": "statement"
+            "name": "expression"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "operator"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "expression"
           }
+        ]
+      }
+    },
+    "operator": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "=="
         },
         {
           "type": "STRING",
-          "value": "}"
+          "value": "!="
+        },
+        {
+          "type": "STRING",
+          "value": "<"
+        },
+        {
+          "type": "STRING",
+          "value": ">"
+        },
+        {
+          "type": "STRING",
+          "value": "<="
+        },
+        {
+          "type": "STRING",
+          "value": ">="
+        },
+        {
+          "type": "STRING",
+          "value": "+"
+        },
+        {
+          "type": "STRING",
+          "value": "-"
+        },
+        {
+          "type": "STRING",
+          "value": "*"
+        },
+        {
+          "type": "STRING",
+          "value": "/"
+        },
+        {
+          "type": "STRING",
+          "value": "%"
         }
       ]
     },
@@ -519,70 +586,17 @@
     },
     "number": {
       "type": "PATTERN",
-      "value": "\\d+"
+      "value": "\\d+(\\.\\d+)?"
     },
     "string": {
       "type": "PATTERN",
-      "value": "\"[^\"]*\""
-    },
-    "comment": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "#"
-          },
-          {
-            "type": "PATTERN",
-            "value": ".*"
-          }
-        ]
-      }
-    },
-    "visibility_modifier": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "known"
-        },
-        {
-          "type": "STRING",
-          "value": "secret"
-        }
-      ]
-    },
-    "tome_keyword": {
-      "type": "STRING",
-      "value": "tome"
-    },
-    "silent_keyword": {
-      "type": "STRING",
-      "value": "silent"
-    },
-    "rune_type": {
-      "type": "STRING",
-      "value": "rune"
-    },
-    "glyph_type": {
-      "type": "STRING",
-      "value": "glyph"
-    },
-    "law_type": {
-      "type": "STRING",
-      "value": "law"
-    },
-    "chaos_type": {
-      "type": "STRING",
-      "value": "chaos"
+      "value": "\"([^\"\\\\]|\\\\.)*\""
     }
   },
   "extras": [
     {
       "type": "PATTERN",
-      "value": "\\s"
+      "value": "\\s|\\\\\\r?\\n"
     },
     {
       "type": "SYMBOL",
