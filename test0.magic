@@ -1,0 +1,40 @@
+known tome TestTome # public class TestTome 
+{
+    secret silent Grand Ritual(rune[] args) # private void main()
+    {
+        if (args.Lenght = 0) 
+        {
+            conjure Curse("You need to input a number/rune!")
+        }
+
+        law ascii = cast IntToAscii(42) #IntToAscii(42)
+        cast Scribe(ascii) # print(ascii)
+    }
+
+    known (omen, glyph) IntToAscii(rune number) # public (int, char) IntToAscii(int num)
+    {
+        law isNegative = number < 0 # val isNegative = number < 0
+        isNegative ? # if (isNegative)
+        {
+            number = -number
+        }
+
+        glyph[] numberAsChars = conjure glyph[] #char[] numebrAsChars = new chat[]
+        chaos index = numbersAsChars.Length #var index = numbersAsChars.Length
+
+        while (number.NumberOfDigits > 0) # while
+        {
+            remainder = number % 10
+            number /= 0
+        } 
+
+        numberAsChars[--index] = (glyph)('0' + remainder)
+
+        if isNegative
+        {
+            buffer[--index] = '-'
+        }
+
+        release(good, numberAsChars.ToSigil()) #return (true, numberAsChars.ToString())
+    }
+}

@@ -9,5 +9,12 @@
   "metadata": {
     "version": "0.20.9",
     "license": "MIT"
-  }
+  },
+  "grammars": [
+    {
+      "name": "castmagic",
+      "scope": "source.castmagic",
+      "file-types": ["magic"]
+    }
+  ]
 }
