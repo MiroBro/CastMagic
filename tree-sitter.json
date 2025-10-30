@@ -1,0 +1,13 @@
+{
+  "name": "castmagic",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the CastMagic language",
+  "file-types": ["magic"],
+  "injection-regex": "castmagic",
+  "scope": "source.castmagic",
+  "maintainers": ["Miro wohoo <emailHEHE@gmail.com>"],
+  "metadata": {
+    "version": "0.20.9",
+    "license": "MIT"
+  }
+}

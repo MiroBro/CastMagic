@@ -1,0 +1,15 @@
+{
+  "name": "tree-sitter-castmagic",
+  "version": "0.1.0",
+  "main": "grammar.js",
+  "dependencies": {
+    "nan": "*"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "*"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test"
+  }
+}

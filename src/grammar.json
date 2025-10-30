@@ -1,0 +1,107 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "castmagic",
+  "rules": {
+    "source_file": {
+      "type": "REPEAT",
+      "content": {
+        "type": "SYMBOL",
+        "name": "tome_declaration"
+      }
+    },
+    "tome_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "visibility_modifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tome_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tome_body"
+        }
+      ]
+    },
+    "tome_body": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "statement"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "visibility_modifier": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "known_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "secret_keyword"
+        }
+      ]
+    },
+    "statement": {
+      "type": "PATTERN",
+      "value": "[^{}]+"
+    },
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    "known_keyword": {
+      "type": "STRING",
+      "value": "known"
+    },
+    "secret_keyword": {
+      "type": "STRING",
+      "value": "secret"
+    },
+    "silent_keyword": {
+      "type": "STRING",
+      "value": "silent"
+    },
+    "tome_keyword": {
+      "type": "STRING",
+      "value": "tome"
+    },
+    "rune_type": {
+      "type": "STRING",
+      "value": "rune"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}
