@@ -31,16 +31,16 @@ module.exports = grammar({
 
     tome_keyword: _ => "tome",
 
-    // visibility for tomes & rituals 
-    visibility_modifier: _ => choice("open", "sealed", "hidden", "known"),
+    // visibility for tomes and rituals (classes and functions)
+    visibility_modifier: _ => choice("known", "secret"),
 
     tome_body: $ => seq(
       "{",
-      repeat($.statement),
+        repeat(choice($.law_declaration,$.ritual_declaration)),
       "}"
     ),
 
-    // statements allowed inside a tome / block
+    // statements allowed inside a statement block
     statement: $ => choice(
       $.ritual_declaration,
       $.if_statement,
@@ -97,7 +97,7 @@ module.exports = grammar({
     // other statements
     //
     law_declaration: $ => seq(
-      "law",
+      choice("law", "chaos"),
       $.identifier,
       "=",
       $.expression

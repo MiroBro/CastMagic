@@ -386,7 +386,11 @@
       "required": false,
       "types": [
         {
-          "type": "statement",
+          "type": "law_declaration",
+          "named": true
+        },
+        {
+          "type": "ritual_declaration",
           "named": true
         }
       ]
@@ -558,6 +562,10 @@
     "named": false
   },
   {
+    "type": "chaos",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true,
     "extra": true
@@ -568,10 +576,6 @@
   },
   {
     "type": "glyph",
-    "named": false
-  },
-  {
-    "type": "hidden",
     "named": false
   },
   {
@@ -599,10 +603,6 @@
     "named": true
   },
   {
-    "type": "open",
-    "named": false
-  },
-  {
     "type": "release",
     "named": false
   },
@@ -611,7 +611,7 @@
     "named": false
   },
   {
-    "type": "sealed",
+    "type": "secret",
     "named": false
   },
   {
