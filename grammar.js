@@ -1,30 +1,37 @@
+// grammar.js
 module.exports = grammar({
   name: "castmagic",
 
   extras: $ => [
     /\s|\\\r?\n/,
-    $._comment,
+    $.comment,
+  ],
+
+    conflicts: $ => [
+    [$.expression, $.call_expression],
   ],
 
   rules: {
     source_file: $ => repeat($.tome_declaration),
 
-    _comment: $ => token(choice(
+    // comments
+    comment: $ => token(choice(
       seq("//", /.*/),
       seq("#", /.*/),
       seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")
     )),
 
-    tome_declaration: $ => seq(
+    // top-level tome (class)
+    tome_declaration: $ => prec(1, seq(
       optional($.visibility_modifier),
       $.tome_keyword,
       $.identifier,
       $.tome_body
-    ),
+    )),
 
     tome_keyword: _ => "tome",
 
-    // 👇 Added "known" here
+    // visibility for tomes & rituals 
     visibility_modifier: _ => choice("open", "sealed", "hidden", "known"),
 
     tome_body: $ => seq(
@@ -33,25 +40,32 @@ module.exports = grammar({
       "}"
     ),
 
+    // statements allowed inside a tome / block
     statement: $ => choice(
       $.ritual_declaration,
       $.if_statement,
+      $.while_statement,
       $.law_declaration,
       $.cast_statement,
       $.conjure_statement,
+      $.release_statement,
       $.expression_statement
     ),
 
-    ritual_declaration: $ => seq(
+    //
+    // rituals (functions / methods)
+    //
+    ritual_declaration: $ => prec(5, seq(
       optional($.visibility_modifier),
-      optional($.silent_keyword),
-      $.identifier,
+      field("return_type", choice($.silent_keyword, $.type, $.tuple_type)),
+      field("name", $.identifier),
       $.parameter_list,
       $.block
-    ),
+    )),
 
     silent_keyword: _ => "silent",
 
+    // parameter list: ( type name, type name )
     parameter_list: $ => seq(
       "(",
       optional(commaSep($.parameter)),
@@ -63,10 +77,25 @@ module.exports = grammar({
       $.identifier
     ),
 
-    type: $ => choice($.rune_type, $.identifier),
+    //
+    // types
+    type: $ => prec(3, seq(
+      choice($.rune_type, $.identifier),
+      repeat(seq("[", "]"))
+    )),
+
+    // tuple return types: (type, type, ...)
+    tuple_type: $ => seq(
+      "(",
+      commaSep($.type),
+      ")"
+    ),
 
     rune_type: _ => choice("rune", "sigil", "glyph", "word", "mark", "trace"),
 
+    //
+    // other statements
+    //
     law_declaration: $ => seq(
       "law",
       $.identifier,
@@ -86,17 +115,37 @@ module.exports = grammar({
 
     if_statement: $ => seq(
       "if",
-      $.parenthesized_expression,
+      choice($.parenthesized_expression, $.expression),
       $.block
     ),
 
+    while_statement: $ => seq(
+      "while",
+      choice($.parenthesized_expression, $.expression),
+      $.block
+    ),
+
+    release_statement: $ => seq(
+      "release",
+      $.argument_list
+    ),
+
+    argument_list: $ => seq(
+      "(",
+      optional(commaSep($.expression)),
+      ")"
+    ),
+
+    //
+    // blocks & basic expressions
+    //
     block: $ => seq(
       "{",
       repeat($.statement),
       "}"
     ),
 
-    expression_statement: $ => seq($.expression, optional(";")),
+    expression_statement: $ => prec(1, seq($.expression, optional(";"))),
 
     parenthesized_expression: $ => seq(
       "(",
@@ -119,20 +168,25 @@ module.exports = grammar({
       ")"
     ),
 
+    // binary expressions (left-associative)
     binary_expression: $ => prec.left(1, seq(
       $.expression,
       $.operator,
       $.expression
     )),
 
-    operator: _ => choice("==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%"),
+    operator: _ => choice("==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "=", "%"),
 
+    //
+    // tokens
+    //
     identifier: _ => /[a-zA-Z_][a-zA-Z0-9_]*/,
     number: _ => /\d+(\.\d+)?/,
     string: _ => /"([^"\\]|\\.)*"/,
   },
 });
 
+// helper
 function commaSep(rule) {
   return seq(rule, repeat(seq(",", rule)));
 }

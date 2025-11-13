@@ -1,5 +1,5 @@
 ========================================
-This is testing if an empty file parses
+Empty file parses correctly
 ========================================
 
 ----------------------------------------
@@ -7,11 +7,134 @@ This is testing if an empty file parses
 (source_file)
 
 ========================================
-This is testing if comments parse correctly
+Single-line comments parse
 ========================================
 
-# WASSAP THIS IS A COMMENT TEST
+# Hello this is a hash comment
+// This is a double-slash comment
 
 ----------------------------------------
 
-(source_file)
+(source_file
+  (comment)
+  (comment))
+
+========================================
+Block comments parse
+========================================
+
+/* This is
+   a block
+   comment */
+
+----------------------------------------
+
+(source_file
+  (comment))
+
+========================================
+Simple tome parses
+========================================
+
+known tome MyTome {
+}
+
+----------------------------------------
+
+(source_file
+  (tome_declaration
+    (visibility_modifier)
+    (tome_keyword)
+    (identifier)
+    (tome_body)))
+
+========================================
+Law declaration inside tome parses
+========================================
+
+known tome MyTome {
+  law x = 42
+}
+
+----------------------------------------
+
+(source_file
+  (tome_declaration
+    (visibility_modifier)
+    (tome_keyword)
+    (identifier)
+    (tome_body
+      (statement
+        (law_declaration
+          (identifier)
+          (expression
+            (number)))))))
+
+========================================
+If-statement parses correctly
+========================================
+
+tome Logic {
+  if (x > 3) {
+    cast magicPower
+  }
+}
+
+----------------------------------------
+
+(source_file
+  (tome_declaration
+    (tome_keyword)
+    (identifier)
+    (tome_body
+      (statement
+        (if_statement
+          (parenthesized_expression
+            (expression
+              (binary_expression
+                (expression (identifier))
+                (operator)
+                (expression (number)))))
+          (block
+            (statement
+              (cast_statement
+                (expression
+                  (identifier))))))))))
+
+========================================
+Ritual declaration with parameters parses
+========================================
+
+known tome Rituals {
+  silent heal(rune target, rune power) {
+    conjure light("golden")
+  }
+}
+
+----------------------------------------
+
+(source_file
+  (tome_declaration
+    (visibility_modifier)
+    (tome_keyword)
+    (identifier)
+    (tome_body
+      (statement
+        (ritual_declaration
+          (silent_keyword)
+          (identifier)
+          (parameter_list
+            (parameter
+              (type (rune_type))
+              (identifier))
+            (parameter
+              (type (rune_type))
+              (identifier)))
+          (block
+            (statement
+              (conjure_statement
+                (expression
+                  (call_expression
+                    function: (identifier)
+                    (expression
+                      (string))))))))))))
